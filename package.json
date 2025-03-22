@@ -1,0 +1,24 @@
+{
+  "name": "cse341-project2",
+  "version": "1.0.0",
+  "description": "Project 2 CRUD Operations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "swagger": "node ./swagger.js",
+    "dev": "nodemon ./server.js"
+  },
+  "author": "Cristian Benites",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.15.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
