@@ -17,6 +17,10 @@ const getAll = async (_, res) => {
 
 const getById = async (req, res) => {
     //#swagger.tags=['Movies']
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid movie id to find a movie.');
+    }
     const movieId = new ObjectId(req.params['id']);
     const result = await mongodb.getDatabase()
         .db()
@@ -57,6 +61,10 @@ const store = async (req, res) => {
 
 const update = async (req, res) => {
     //#swagger.tags=['Movies']
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid movie id to update a movie.');
+    }
     const userId = new ObjectId(req.params.id);
     const movie = {
         title: req.body.title,
@@ -83,6 +91,10 @@ const update = async (req, res) => {
 
 const deleteMovie = async (req, res) => {
     //#swagger.tags=['Movies']
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid movie id to delete a movie.');
+    }
     const userId = new ObjectId(req.params.id);
     const response = await mongodb.getDatabase()
         .db()

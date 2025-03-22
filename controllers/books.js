@@ -4,29 +4,38 @@ const mongodb = require('../data/database');
 
 const getAll = async (_, res) => {
     //#swagger.tags=['Books']
-    const result = await mongodb.getDatabase()
+    await mongodb.getDatabase()
         .db()
         .collection('books')
-        .find();
+        .find()
+        .toArray((err, books) => {
+            if (err) {
+                res.status(400).json({ message: err });
+            }
 
-    result.toArray().then((books) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(books);
-    });
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).json(books);
+        });
 };
 
 const getById = async (req, res) => {
     //#swagger.tags=['Books']
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid book id to find a book.');
+    }
     const bookId = new ObjectId(req.params['id']);
-    const result = await mongodb.getDatabase()
+    await mongodb.getDatabase()
         .db()
         .collection('books')
-        .find({ _id: bookId });
-
-    result.toArray().then((books) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(books[0]);
-    });
+        .find({ _id: bookId })
+        .toArray((err, books) => {
+            if (err) {
+                res.status(400).json({ message: err });
+            }
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).json(books[0]);
+        });
 };
 
 const store = async (req, res) => {
@@ -45,6 +54,8 @@ const store = async (req, res) => {
         .collection('books')
         .insertOne(book);
 
+    console.log(response);
+
     if (response.acknowledged) {
         res.status(204).send();
     } else {
@@ -56,6 +67,10 @@ const store = async (req, res) => {
 
 const update = async (req, res) => {
     //#swagger.tags=['Books']
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid book id to update a book.');
+    }
     const userId = new ObjectId(req.params.id);
     const book = {
         title: req.body.title,
@@ -81,6 +96,10 @@ const update = async (req, res) => {
 
 const deleteBook = async (req, res) => {
     //#swagger.tags=['Books']
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid book id to delete a book.');
+    }
     const userId = new ObjectId(req.params.id);
     const response = await mongodb.getDatabase()
         .db()
