@@ -9,10 +9,15 @@ const getAll = async (_, res) => {
         .collection('movies')
         .find();
 
-    result.toArray().then((movies) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(movies);
-    });
+    result
+        .toArray()
+        .then((movies) => {
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).json(movies);
+        })
+        .catch((err) => {
+            res.status(400).json({ message: err });
+        });
 };
 
 const getById = async (req, res) => {
@@ -27,10 +32,15 @@ const getById = async (req, res) => {
         .collection('movies')
         .find({ _id: movieId });
 
-    result.toArray().then((movies) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(movies[0]);
-    });
+    result
+        .toArray()
+        .then((movies) => {
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).json(movies[0]);
+        })
+        .catch((err) => {
+            res.status(400).json({ message: err });
+        });
 };
 
 const store = async (req, res) => {
