@@ -4,20 +4,25 @@ const mongodb = require('../data/database');
 
 const getAll = async (_, res) => {
     //#swagger.tags=['Books']
-    const result = await mongodb.getDatabase()
-        .db()
-        .collection('books')
-        .find();
+    try {
+        const result = await mongodb.getDatabase()
+            .db()
+            .collection('books')
+            .find();
 
-    result
-        .toArray()
-        .then((books) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(books);
-        })
-        .catch((err) => {
-            res.status(400).json({ message: err });
-        });
+        result
+            .toArray()
+            .then((books) => {
+                res.setHeader('Content-Type', 'application/json');
+                res.status(200).json(books);
+            })
+            .catch((err) => {
+                res.status(400).json({ message: err });
+            });
+    } catch (err) {
+        res.status(500)
+            .json(err || 'Some error occurred. Please try again.');
+    }
 };
 
 const getById = async (req, res) => {
@@ -27,20 +32,26 @@ const getById = async (req, res) => {
         res.status(400).json('Must use a valid book id to find a book.');
     }
     const bookId = new ObjectId(req.params['id']);
-    const result = await mongodb.getDatabase()
-        .db()
-        .collection('books')
-        .find({ _id: bookId });
 
-    result
-        .toArray()
-        .then((books) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(books[0]);
-        })
-        .catch((err) => {
-            res.status(400).json({ message: err });
-        });
+    try {
+        const result = await mongodb.getDatabase()
+            .db()
+            .collection('books')
+            .find({ _id: bookId });
+
+        result
+            .toArray()
+            .then((books) => {
+                res.setHeader('Content-Type', 'application/json');
+                res.status(200).json(books[0]);
+            })
+            .catch((err) => {
+                res.status(400).json({ message: err });
+            });
+    } catch (err) {
+        res.status(500)
+            .json(err || 'Some error occurred. Please try again.');
+    }
 };
 
 const store = async (req, res) => {
@@ -54,20 +65,22 @@ const store = async (req, res) => {
         language: req.body.language
     }
 
-    const response = await mongodb.getDatabase()
-        .db()
-        .collection('books')
-        .insertOne(book);
+    try {
+        const response = await mongodb.getDatabase()
+            .db()
+            .collection('books')
+            .insertOne(book);
 
-    console.log(response);
-
-    if (response.acknowledged) {
-        res.status(204).send();
-    } else {
+        if (response.acknowledged) {
+            res.status(204).send();
+        } else {
+            res.status(500)
+                .json(response.error || 'Some error occurred while creating the book.');
+        }
+    } catch (error) {
         res.status(500)
-            .json(response.error || 'Some error occurred while creating the book.');
+            .json(error || 'Some error occurred. Please try again.')
     }
-
 };
 
 const update = async (req, res) => {
@@ -86,16 +99,21 @@ const update = async (req, res) => {
         language: req.body.language
     }
 
-    const response = await mongodb.getDatabase()
-        .db()
-        .collection('books')
-        .replaceOne({ _id: userId}, book);
+    try {
+        const response = await mongodb.getDatabase()
+            .db()
+            .collection('books')
+            .replaceOne({ _id: userId}, book);
 
-    if (response.modifiedCount > 0) {
-        res.status(204).send();
-    } else {
+        if (response.modifiedCount > 0) {
+            res.status(204).send();
+        } else {
+            res.status(500)
+                .json(response.error || 'Some error occurred while updating the book.');
+        }
+    } catch (err) {
         res.status(500)
-            .json(response.error || 'Some error occurred while updating the book.');
+            .json(err || 'Some error occurred. Please try again.')
     }
 };
 
@@ -106,16 +124,21 @@ const deleteBook = async (req, res) => {
         res.status(400).json('Must use a valid book id to delete a book.');
     }
     const userId = new ObjectId(req.params.id);
-    const response = await mongodb.getDatabase()
-        .db()
-        .collection('books')
-        .deleteOne({ _id: userId}, true);
+    try {
+        const response = await mongodb.getDatabase()
+            .db()
+            .collection('books')
+            .deleteOne({ _id: userId}, true);
 
-    if (response.deletedCount > 0) {
-        res.status(204).send();
-    } else {
+        if (response.deletedCount > 0) {
+            res.status(204).send();
+        } else {
+            res.status(500)
+                .json(response.error || 'Some error occurred while deleting the book.');
+        }
+    } catch (err) {
         res.status(500)
-            .json(response.error || 'Some error occurred while deleting the book.');
+            .json(err || 'Some error occurred. Please try again.')
     }
 };
 

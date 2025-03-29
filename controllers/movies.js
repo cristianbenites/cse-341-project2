@@ -4,20 +4,26 @@ const mongodb = require('../data/database');
 
 const getAll = async (_, res) => {
     //#swagger.tags=['Movies']
-    const result = await mongodb.getDatabase()
-        .db()
-        .collection('movies')
-        .find();
 
-    result
-        .toArray()
-        .then((movies) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(movies);
-        })
-        .catch((err) => {
-            res.status(400).json({ message: err });
-        });
+    try {
+        const result = await mongodb.getDatabase()
+            .db()
+            .collection('movies')
+            .find();
+
+        result
+            .toArray()
+            .then((movies) => {
+                res.setHeader('Content-Type', 'application/json');
+                res.status(200).json(movies);
+            })
+            .catch((err) => {
+                res.status(400).json({ message: err });
+            });
+    } catch (err) {
+        res.status(500)
+            .json(err || 'Some error occurred. Please try again.');
+    }
 };
 
 const getById = async (req, res) => {
@@ -27,20 +33,26 @@ const getById = async (req, res) => {
         res.status(400).json('Must use a valid movie id to find a movie.');
     }
     const movieId = new ObjectId(req.params['id']);
-    const result = await mongodb.getDatabase()
-        .db()
-        .collection('movies')
-        .find({ _id: movieId });
 
-    result
-        .toArray()
-        .then((movies) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(movies[0]);
-        })
-        .catch((err) => {
-            res.status(400).json({ message: err });
-        });
+    try {
+        const result = await mongodb.getDatabase()
+            .db()
+            .collection('movies')
+            .find({ _id: movieId });
+
+        result
+            .toArray()
+            .then((movies) => {
+                res.setHeader('Content-Type', 'application/json');
+                res.status(200).json(movies[0]);
+            })
+            .catch((err) => {
+                res.status(400).json({ message: err });
+            });
+    } catch (err) {
+        res.status(500)
+            .json(err || 'Some error occurred. Please try again.');
+    }
 };
 
 const store = async (req, res) => {
@@ -55,18 +67,22 @@ const store = async (req, res) => {
         rating: req.body.rating,
     }
 
-    const response = await mongodb.getDatabase()
-        .db()
-        .collection('movies')
-        .insertOne(movie);
+    try {
+        const response = await mongodb.getDatabase()
+            .db()
+            .collection('movies')
+            .insertOne(movie);
 
-    if (response.acknowledged) {
-        res.status(204).send();
-    } else {
+        if (response.acknowledged) {
+            res.status(204).send();
+        } else {
+            res.status(500)
+                .json(response.error || 'Some error occurred while creating the movie.');
+        }
+    } catch (err) {
         res.status(500)
-            .json(response.error || 'Some error occurred while creating the movie.');
+            .json(err || 'Some error occurred. Please try again.');
     }
-
 };
 
 const update = async (req, res) => {
@@ -86,16 +102,21 @@ const update = async (req, res) => {
         rating: req.body.rating,
     }
 
-    const response = await mongodb.getDatabase()
-        .db()
-        .collection('movies')
-        .replaceOne({ _id: userId}, movie);
+    try {
+        const response = await mongodb.getDatabase()
+            .db()
+            .collection('movies')
+            .replaceOne({ _id: userId}, movie);
 
-    if (response.modifiedCount > 0) {
-        res.status(204).send();
-    } else {
+        if (response.modifiedCount > 0) {
+            res.status(204).send();
+        } else {
+            res.status(500)
+                .json(response.error || 'Some error occurred while updating the movie.');
+        }
+    } catch (err) {
         res.status(500)
-            .json(response.error || 'Some error occurred while updating the movie.');
+            .json(err || 'Some error occurred. Please try again.');
     }
 };
 
@@ -106,16 +127,22 @@ const deleteMovie = async (req, res) => {
         res.status(400).json('Must use a valid movie id to delete a movie.');
     }
     const userId = new ObjectId(req.params.id);
-    const response = await mongodb.getDatabase()
-        .db()
-        .collection('movies')
-        .deleteOne({ _id: userId}, true);
 
-    if (response.deletedCount > 0) {
-        res.status(204).send();
-    } else {
+    try {
+        const response = await mongodb.getDatabase()
+            .db()
+            .collection('movies')
+            .deleteOne({ _id: userId}, true);
+
+        if (response.deletedCount > 0) {
+            res.status(204).send();
+        } else {
+            res.status(500)
+                .json(response.error || 'Some error occurred while deleting the movie.');
+        }
+    } catch (err) {
         res.status(500)
-            .json(response.error || 'Some error occurred while deleting the movie.');
+            .json(err || 'Some error occurred. Please try again.');
     }
 };
 
