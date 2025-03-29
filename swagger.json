@@ -5,22 +5,48 @@
     "description": "Project 2 Api of movies and books",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "project-2-1100.onrender.com/",
   "basePath": "/",
   "schemes": [
-    "http",
     "https"
   ],
   "paths": {
     "/": {
       "get": {
-        "tags": [
-          "Hello World"
-        ],
         "description": "",
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/github/callback": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
           }
         }
       }
@@ -47,6 +73,12 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -90,6 +122,9 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "422": {
             "description": "Unprocessable Entity"
@@ -123,6 +158,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -176,6 +214,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "422": {
             "description": "Unprocessable Entity"
           },
@@ -204,6 +245,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -225,6 +269,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -266,6 +313,9 @@
           "204": {
             "description": "No Content"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "422": {
             "description": "Unprocessable Entity"
           },
@@ -298,6 +348,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -348,6 +401,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "422": {
             "description": "Unprocessable Entity"
           },
@@ -375,6 +431,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
