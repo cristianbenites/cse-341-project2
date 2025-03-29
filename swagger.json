@@ -5,9 +5,10 @@
     "description": "Project 2 Api of movies and books",
     "version": "1.0.0"
   },
-  "host": "project-2-1100.onrender.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
+    "http",
     "https"
   ],
   "paths": {
